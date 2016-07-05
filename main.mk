@@ -28,9 +28,12 @@ compile: node_modules
 js.src := $(shell find $(src) -name '*.js' -type f)
 js.dest := $(patsubst $(src)%.js, $(out)/.ccache/%.js, $(js.src))
 
+ifeq ($(NODE_ENV), development)
+BABEL_OPT := -s inline
+endif
 $(out)/.ccache/%.js: $(src)%.js
 	$(mkdir)
-	node_modules/.bin/babel --presets es2015 $< -o $@
+	node_modules/.bin/babel --presets es2015 $(BABEL_OPT) $< -o $@
 
 compile: $(js.dest)
 
@@ -38,9 +41,12 @@ compile: $(js.dest)
 bundles.src := $(filter %/main.js, $(js.dest))
 bundles.dest := $(patsubst $(out)/.ccache/%.js, $(out)/%.js, $(bundles.src))
 
+ifeq ($(NODE_ENV), development)
+BROWSERIFY_OPT := -d
+endif
 $(bundles.dest): $(out)/%.js: $(out)/.ccache/%.js
 	$(mkdir)
-	node_modules/.bin/browserify $< -o $@
+	node_modules/.bin/browserify $(BROWSERIFY_OPT) $< -o $@
 
 compile: $(bundles.dest)
 
