@@ -57,7 +57,7 @@ $(out)/.ccache/depend.mk: $(js.dest)
 	$(restart_make)
 
 
-static.src := $(src)/comments/main.css $(src)/manifest.json
+static.src := $(wildcard $(src)/*/*.css $(src)/*/*.html) $(src)/manifest.json
 static.dest := $(patsubst $(src)%, $(out)/%, $(static.src))
 
 $(static.dest): $(out)/%: $(src)%

@@ -1,3 +1,39 @@
-body {
-  background: yellow;
+#hnd-help {
+  background-color: white;
+  padding: 1em;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+}
+
+.hnd-btn-close {
+  font-size: large;
+  cursor: pointer;
+  color: black;
+}
+
+#hnd-help table, #hnd-help th, #hnd-help td {
+  border: 1px solid gray;
+  color: black;
+}
+
+#hnd-help table {
+  border-collapse: collapse;
+}
+
+#hnd-help th, #hnd-help td {
+  padding: 0.4em;
+}
+
+#hnd-help th {
+  background-color: lightgoldenrodyellow;
+  text-align: center !important;
+}
+
+#hnd-help tr:nth-child(even) {
+  background-color: #fafafa;
 }

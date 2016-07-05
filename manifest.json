@@ -11,5 +11,9 @@
 	    "css": ["comments/main.css"],
 	    "js": ["comments/main.js"]
 	}
+    ],
+
+    "web_accessible_resources": [
+	"comments/*"
     ]
 }
