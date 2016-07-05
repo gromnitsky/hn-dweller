@@ -5,7 +5,7 @@
 require("babel-polyfill")
 let Mustache = require('mustache')
 
-let Keyboard = require('./keyboard')
+let keyboard = require('./keyboard')
 
 let bus = {
     cmd: {}
@@ -13,8 +13,7 @@ let bus = {
 
 class Help {
 
-    constructor(bus) {
-	// register the command
+    register(bus) {
 	bus.cmd.help = { obj: this, name: this.display }
     }
 
@@ -53,7 +52,9 @@ class Help {
 }
 
 
-let help = new Help(bus)
-let kbd = new Keyboard(bus)
+let help = new Help()
+help.register(bus)
 
-console.log("comments: init")
+keyboard.connect(bus)
+
+console.info("comments: init")

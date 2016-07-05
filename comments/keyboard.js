@@ -1,32 +1,25 @@
-class Keyboard {
+'use strict';
 
-    constructor(bus) {
-	this.bus = bus
-	this.connect()
-    }
+let IGNORED_ELEMENTS = ['INPUT', 'TEXTAREA']
 
-    connect() {
-	document.body.addEventListener('keydown', (event) => {
-	    if (!this.is_valid_dom_node(event.target.nodeName)) return
-
-	    if (event.key in Keyboard.bindings) {
-		let cmd = this.bus.cmd[Keyboard.bindings[event.key][1]]
-		let args = Keyboard.bindings[event.key].slice(2)
-		cmd.name.apply(cmd.obj, args)
-	    }
-	}, false)
-    }
-
-    is_valid_dom_node(name) {
-	return Keyboard.IGNORED_ELEMENTS.indexOf(name) === -1
-    }
-}
-
-Keyboard.IGNORED_ELEMENTS = ['INPUT', 'TEXTAREA']
-Keyboard.bindings = {
+let BINDINGS = {
     ',': ['Jump to the previous unread comment', 'prev_unread'],
     '.': ['Jump to the next unread comment', 'next_unread'],
-    '?': ['(Close) this help', 'help', () => Keyboard.bindings]
+    '?': ['(Close) this help', 'help', () => BINDINGS]
 }
 
-module.exports = Keyboard
+let is_valid_dom_node = function(name) {
+    return IGNORED_ELEMENTS.indexOf(name) === -1
+}
+
+exports.connect = function(bus) {
+    document.body.addEventListener('keydown', (event) => {
+	if (!is_valid_dom_node(event.target.nodeName)) return
+
+	if (event.key in BINDINGS) {
+	    let cmd = bus.cmd[BINDINGS[event.key][1]]
+	    let args = BINDINGS[event.key].slice(2)
+	    cmd.name.apply(cmd.obj, args)
+	}
+    }, false)
+}
