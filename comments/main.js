@@ -7,12 +7,18 @@ let Mustache = require('mustache')
 
 let Keyboard = require('./keyboard')
 
-class App {
+let bus = {
+    cmd: {}
+}
 
-    constructor() {
+class Help {
+
+    constructor(bus) {
+	// register the command
+	bus.cmd.help = { obj: this, name: this.display }
     }
 
-    help_close() {
+    close() {
 	let node = document.getElementById("hnd-help")
 	if (node) {
 	    document.body.removeChild(node)
@@ -20,8 +26,8 @@ class App {
 	}
     }
 
-    help(kb) {
-	if (this.help_close()) return
+    display(kb) {
+	if (this.close()) return
 
 	fetch(chrome.extension.getURL('comments/help.html')).then( (res) => {
 	    return res.text()
@@ -38,15 +44,16 @@ class App {
 	    document.body.appendChild(div)
 	    div.innerHTML = html
 
-	    let close = div.querySelector('#hnd-help span[class="hnd-btn-close"]')
-	    close.onclick = () => this.help_close()
+	    let close_btn = div.querySelector('#hnd-help span[class="hnd-btn-close"]')
+	    close_btn.onclick = () => this.close()
 	}).catch( (err) => {
 	    alert(`No help file: ${err.message}`)
 	})
     }
 }
 
-let app = new App()
-let kbd = new Keyboard(app)
+
+let help = new Help(bus)
+let kbd = new Keyboard(bus)
 
 console.log("comments: init")

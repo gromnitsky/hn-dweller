@@ -1,7 +1,7 @@
 class Keyboard {
 
-    constructor(app) {
-	this.app = app
+    constructor(bus) {
+	this.bus = bus
 	this.connect()
     }
 
@@ -10,9 +10,9 @@ class Keyboard {
 	    if (!this.is_valid_dom_node(event.target.nodeName)) return
 
 	    if (event.key in Keyboard.bindings) {
-		let method = Keyboard.bindings[event.key][1]
+		let cmd = this.bus.cmd[Keyboard.bindings[event.key][1]]
 		let args = Keyboard.bindings[event.key].slice(2)
-		this.app[method].apply(this.app, args)
+		cmd.name.apply(cmd.obj, args)
 	    }
 	}, false)
     }
