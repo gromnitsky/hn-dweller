@@ -54,10 +54,75 @@ class Help {
 }
 
 
+class Message {
+
+    constructor(domnode) {
+	this.id = null
+	this.from = null
+
+	this.domnode = domnode
+	this.parent = null	// a Message object
+	this.level = -1
+	this.kids = []
+
+	this.parse()
+    }
+
+    parse() {
+	if (!this.domnode) return
+
+	this.id = this.domnode.id
+	this.level = this.domnode.querySelector('img[height="1"]').width
+	this.from = this.domnode.querySelector('a[class="hnuser"]').innerHTML
+    }
+
+    kid_add(msg) {
+	msg.parent = this
+	this.kids.push(msg)
+    }
+
+    find_parent_for(msg) {
+	if (!msg) throw new Error("cannot find parent for nil")
+
+	const magic = 40
+	if (msg.level - this.level === magic) return this
+	if (this.level <= 0) return this
+
+	// RECURSION!
+	return this.parent.find_parent_for(msg)
+    }
+}
+
+class Forum {
+    constructor() {
+	this.root = new Message()
+	let domnodes = document.querySelectorAll('tr[class*="comtr"]')
+	if (!(domnodes && domnodes.length)) {
+	    console.info("no messages")
+	    return
+	}
+
+	let prev = null
+	for (let node of domnodes) {
+	    let msg = new Message(node)
+	    if (msg.level === 0) {
+		this.root.kid_add(msg)
+	    } else {
+		let parent = prev.find_parent_for(msg)
+		parent.kid_add(msg)
+	    }
+	    prev = msg
+	    console.log(msg.id, msg.level, msg.from, msg.parent ? msg.parent.id : null)
+	}
+    }
+}
+
 keyboard.connect()
 
 let help = new Help()
 help.register(keyboard)
 
+let forum = new Forum()
+//console.log(forum.root)
 
-console.info("comments: init")
+console.info("init")
