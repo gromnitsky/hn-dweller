@@ -1,0 +1,15 @@
+{
+    "manifest_version": 2,
+
+    "name": "hn-dweller",
+    "description": "An enhanced version of Hacker News",
+    "version": "0.0.1",
+
+    "content_scripts": [
+	{
+	    "matches": ["file:///*/user-comments/news.ycombinator.com/index.html"],
+	    "css": ["comments/main.css"],
+	    "js": ["comments/main.js"]
+	}
+    ]
+}
