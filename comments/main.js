@@ -7,14 +7,16 @@ let Mustache = require('mustache')
 
 let keyboard = require('./keyboard')
 
-let bus = {
-    cmd: {}
-}
-
 class Help {
 
-    register(bus) {
-	bus.cmd.help = { obj: this, name: this.display }
+    register(kbd) {
+	kbd.register({
+	    key: '?',
+	    desc: '(Close) this help',
+	    obj: this,
+	    method: this.display,
+	    args: [() => kbd.bindings]
+	})
     }
 
     close() {
@@ -34,7 +36,7 @@ class Help {
 	    let keylist = []
 	    for (let key in kb()) {
 		let val = kb()[key]
-		keylist.push({key, desc: val[0]})
+		keylist.push({key, desc: val.desc})
 	    }
 	    let html = Mustache.render(text, {keylist})
 
@@ -52,9 +54,10 @@ class Help {
 }
 
 
-let help = new Help()
-help.register(bus)
+keyboard.connect()
 
-keyboard.connect(bus)
+let help = new Help()
+help.register(keyboard)
+
 
 console.info("comments: init")
