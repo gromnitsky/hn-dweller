@@ -1,3 +1,5 @@
+/* Help */
+
 #hnd-help {
   background-color: white;
   padding: 1em;
@@ -36,4 +38,22 @@
 
 #hnd-help tr:nth-child(even) {
   background-color: #fafafa;
+}
+
+
+/* Message */
+
+.hnd-msg-btn-open::before {
+  content: "[-]";
+  cursor: zoom-out;
+}
+
+.hnd-msg-btn-closed::before {
+  content: "[+]";
+  cursor: zoom-in;
+}
+
+.hnd-msg-btn-selected {
+  background-color: orange;
+  color: black;
 }

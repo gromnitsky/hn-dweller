@@ -66,6 +66,10 @@ class Message {
 	this.kids = []
 
 	this.parse()
+
+	// gui state
+	this.visible = true
+	this.btn = this.mkbutton()
     }
 
     parse() {
@@ -90,6 +94,41 @@ class Message {
 
 	// RECURSION!
 	return this.parent.find_parent_for(msg)
+    }
+
+    mkbutton() {
+	if (!this.domnode) return
+
+	let name_node = this.domnode.querySelector('a[class="hnuser"]')
+	let btn = document.createElement('span')
+	btn.className = 'hnd-msg-btn-open'
+	btn.innerHTML = '&nbsp;'
+	btn.onclick = () => this.toggle()
+
+	name_node.insertAdjacentElement('beforebegin', btn)
+	return btn
+    }
+
+    toggle() {
+	this.visible ? this.close() : this.open()
+    }
+
+    close() {
+	let body = this.domnode.querySelector('span[class="comment"]')
+	body.style.display = "none"
+	this.btn.className = 'hnd-msg-btn-closed'
+	this.visible = false
+
+	for (let kid of this.kids) kid.close()
+    }
+
+    open() {
+	let body = this.domnode.querySelector('span[class="comment"]')
+	body.style.display = ""
+	this.btn.className = 'hnd-msg-btn-open'
+	this.visible = true
+
+	for (let kid of this.kids) kid.open()
     }
 }
 
