@@ -11,7 +11,7 @@ let listen = function(event) {
 
     if (event.key in exports.bindings) {
 	let cmd = exports.bindings[event.key]
-	cmd.method.apply(cmd.obj, cmd.args)
+	cmd.obj()[cmd.method].apply(cmd.obj(), cmd.args)
     }
 }
 

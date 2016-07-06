@@ -13,8 +13,8 @@ class Help {
 	kbd.register({
 	    key: '?',
 	    desc: '(Close) this help',
-	    obj: this,
-	    method: this.display,
+	    obj: () => this,
+	    method: 'display',
 	    args: [() => kbd.bindings]
 	})
     }
@@ -68,7 +68,6 @@ class Message {
 	this.parse()
 
 	// gui state
-	this.visible = true
 	this.btn = this.mkbutton()
     }
 
@@ -102,22 +101,29 @@ class Message {
 	let name_node = this.domnode.querySelector('a[class="hnuser"]')
 	let btn = document.createElement('span')
 	btn.className = 'hnd-msg-btn-open'
-	btn.innerHTML = '&nbsp;'
 	btn.onclick = () => this.toggle()
 
+	let space = document.createElement('span')
+	space.innerHTML = '&nbsp;'
+
 	name_node.insertAdjacentElement('beforebegin', btn)
+	name_node.insertAdjacentElement('beforebegin', space)
 	return btn
     }
 
     toggle() {
-	this.visible ? this.close() : this.open()
+	this.is_visible() ? this.close() : this.open()
+    }
+
+    is_visible() {
+	return this.btn.classList.contains('hnd-msg-btn-open')
     }
 
     close() {
 	let body = this.domnode.querySelector('span[class="comment"]')
 	body.style.display = "none"
-	this.btn.className = 'hnd-msg-btn-closed'
-	this.visible = false
+	this.btn.classList.add('hnd-msg-btn-closed')
+	this.btn.classList.remove('hnd-msg-btn-open')
 
 	for (let kid of this.kids) kid.close()
     }
@@ -125,16 +131,46 @@ class Message {
     open() {
 	let body = this.domnode.querySelector('span[class="comment"]')
 	body.style.display = ""
-	this.btn.className = 'hnd-msg-btn-open'
-	this.visible = true
+	this.btn.classList.remove('hnd-msg-btn-closed')
+	this.btn.classList.add('hnd-msg-btn-open')
 
 	for (let kid of this.kids) kid.open()
+    }
+
+    select() {
+	this.btn.classList.add('hnd-msg-btn-selected')
+	this.domnode.scrollIntoView(true)
+    }
+
+    deselect() {
+	this.btn.classList.remove('hnd-msg-btn-selected')
     }
 }
 
 class Forum {
     constructor() {
 	this.root = new Message()
+	this.flatlist = []
+	this.index = 0
+	this.selected = null
+	this.mktree()
+
+	// FIXME: select the 1st unread
+	this.select(0)
+    }
+
+    select(index) {
+	if (index >= this.flatlist.length) index = 0
+	if (index < 0) index = this.flatlist.length-1
+
+	this.index = index
+	if (this.selected) this.selected.deselect()
+	let msg = this.flatlist[index]
+	msg.select()
+	this.selected = msg
+    }
+
+    mktree() {
 	let domnodes = document.querySelectorAll('tr[class*="comtr"]')
 	if (!(domnodes && domnodes.length)) {
 	    console.info("no messages")
@@ -151,8 +187,41 @@ class Forum {
 		parent.kid_add(msg)
 	    }
 	    prev = msg
-	    console.log(msg.id, msg.level, msg.from, msg.parent ? msg.parent.id : null)
+	    this.flatlist.push(msg)
+//	    console.log(msg.id, msg.level, msg.from, msg.parent ? msg.parent.id : null)
 	}
+    }
+
+    next() {
+	this.select(this.index + 1)
+    }
+
+    prev() {
+	this.select(this.index - 1)
+    }
+
+    register(kbd) {
+	kbd.register({
+	    key: 'j',
+	    desc: 'Jump to the next comment',
+	    obj: () => this,
+	    method: 'next',
+	    args: []
+	})
+	kbd.register({
+	    key: 'k',
+	    desc: 'Jump to the prev comment',
+	    obj: () => this,
+	    method: 'prev',
+	    args: []
+	})
+	kbd.register({
+	    key: '-',
+	    desc: 'Toggle message & its kids',
+	    obj: () => this.selected,
+	    method: 'toggle',
+	    args: []
+	})
     }
 }
 
@@ -162,6 +231,7 @@ let help = new Help()
 help.register(keyboard)
 
 let forum = new Forum()
+forum.register(keyboard)
 //console.log(forum.root)
 
 console.info("init")
