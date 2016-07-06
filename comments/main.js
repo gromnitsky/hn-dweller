@@ -200,6 +200,44 @@ class Forum {
 	this.select(this.index - 1)
     }
 
+    move_to_open(direction, condition, start) {
+	let can_retry = false
+	if (start === undefined) {
+	    start = this.index + direction
+	    can_retry = true
+	}
+	if (start >= this.flatlist.length) start = 0
+	if (start < 0) start = this.flatlist.length-1
+
+	for (let idx=start; condition(idx); idx += direction) {
+	    let msg = this.flatlist[idx]
+	    if (msg.is_visible()) {
+		this.select(idx)
+		return
+	    }
+	}
+
+	if (can_retry) {
+	    this.move_to_open(direction, condition,
+			      (direction === 1 ? 0 : this.flatlist.length - 1))
+	} else {
+	    console.log('no open messages found')
+	}
+    }
+
+    next_open(start) {
+	this.move_to_open(1, (idx) => idx < this.flatlist.length, start)
+    }
+
+    prev_open(start) {
+	this.move_to_open(-1, (idx) => idx >= 0, start)
+    }
+
+    close_subthread_and_move_on() {
+	this.selected.close()
+	this.next_open()
+    }
+
     register(kbd) {
 	kbd.register({
 	    key: 'j',
@@ -220,6 +258,27 @@ class Forum {
 	    desc: 'Toggle message & its kids',
 	    obj: () => this.selected,
 	    method: 'toggle',
+	    args: []
+	})
+	kbd.register({
+	    key: ',',
+	    desc: 'Jump to the next <i>open</i> comment',
+	    obj: () => this,
+	    method: 'prev_open',
+	    args: []
+	})
+	kbd.register({
+	    key: '.',
+	    desc: 'Jump to the prev <i>open</i> comment',
+	    obj: () => this,
+	    method: 'next_open',
+	    args: []
+	})
+	kbd.register({
+	    key: 'r',
+	    desc: 'Close the current sub-thread & move to the next <i>open</i> comment',
+	    obj: () => this,
+	    method: 'close_subthread_and_move_on',
 	    args: []
 	})
     }
