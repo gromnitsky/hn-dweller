@@ -139,6 +139,7 @@ class Forum {
 	let prev = null
 	for (let node of domnodes) {
 	    let msg = new Message(node)
+	    msg.flatlist_index = this.flatlist.length
 	    if (msg.level === 0) {
 		this.root.kid_add(msg)
 	    } else {
@@ -147,7 +148,6 @@ class Forum {
 	    }
 	    prev = msg
 	    this.flatlist.push(msg)
-//	    console.log(msg.id, msg.level, msg.from, msg.parent ? msg.parent.id : null)
 	}
     }
 
@@ -219,6 +219,13 @@ class Forum {
     prev_level0() {
 	this.move_to(-1, (idx) => idx >= 0,
 		     (msg) => msg.level === 0)
+    }
+
+    jump_to_parent() {
+	let parent = this.selected.parent
+	if (parent.level === -1) return
+	parent.open()
+	this.select(parent.flatlist_index)
     }
 
     register(kbd) {
@@ -297,6 +304,13 @@ class Forum {
 	    desc: 'Jump to the prev <i>root</i> comment',
 	    obj: () => this,
 	    method: 'next_level0',
+	    args: []
+	})
+	kbd.register({
+	    key: 'g',
+	    desc: 'Jump to the parent comment',
+	    obj: () => this,
+	    method: 'jump_to_parent',
 	    args: []
 	})
     }
