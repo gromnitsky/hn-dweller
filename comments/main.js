@@ -252,6 +252,16 @@ class Forum {
 		     (msg) => msg.from === this.selected.from)
     }
 
+    next_level0() {
+	this.move_to(1, (idx) => idx < this.flatlist.length,
+		     (msg) => msg.level === 0)
+    }
+
+    prev_level0() {
+	this.move_to(-1, (idx) => idx >= 0,
+		     (msg) => msg.level === 0)
+    }
+
     register(kbd) {
 	kbd.register({
 	    key: 'j',
@@ -307,6 +317,20 @@ class Forum {
 	    desc: 'Jump to the prev comment of the same author',
 	    obj: () => this,
 	    method: 'prev_author',
+	    args: []
+	})
+	kbd.register({
+	    key: '[',
+	    desc: 'Jump to the next <i>root</i> comment',
+	    obj: () => this,
+	    method: 'prev_level0',
+	    args: []
+	})
+	kbd.register({
+	    key: ']',
+	    desc: 'Jump to the prev <i>root</i> comment',
+	    obj: () => this,
+	    method: 'next_level0',
 	    args: []
 	})
     }
