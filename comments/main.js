@@ -3,56 +3,9 @@
 'use strict';
 
 require("babel-polyfill")
-let Mustache = require('mustache')
 
 let keyboard = require('./keyboard')
-
-class Help {
-
-    register(kbd) {
-	kbd.register({
-	    key: '?',
-	    desc: '(Close) this help',
-	    obj: () => this,
-	    method: 'display',
-	    args: [() => kbd.bindings]
-	})
-    }
-
-    close() {
-	let node = document.getElementById("hnd-help")
-	if (node) {
-	    document.body.removeChild(node)
-	    return true
-	}
-    }
-
-    display(kb) {
-	if (this.close()) return
-
-	fetch(chrome.extension.getURL('comments/help.html')).then( (res) => {
-	    return res.text()
-	}).then( (text) => {
-	    let keylist = []
-	    for (let key in kb()) {
-		let val = kb()[key]
-		keylist.push({key, desc: val.desc})
-	    }
-	    let html = Mustache.render(text, {keylist})
-
-	    let div = document.createElement('div')
-	    div.id = 'hnd-help'
-	    document.body.appendChild(div)
-	    div.innerHTML = html
-
-	    let close_btn = div.querySelector('#hnd-help span[class="hnd-btn-close"]')
-	    close_btn.onclick = () => this.close()
-	}).catch( (err) => {
-	    alert(`No help file: ${err.message}`)
-	})
-    }
-}
-
+let Help = require('./help')
 
 class Message {
 
@@ -155,8 +108,14 @@ class Forum {
 	this.selected = null
 	this.mktree()
 
-	// FIXME: select the 1st unread
-	this.select(0)
+	this.next_open(0)
+    }
+
+    dump_info() {
+	console.log(`this.index=${this.index}`,
+		    `this.flatlist.length=${this.flatlist.length}`)
+	console.log('this.selected:')
+	console.log(this.selected)
     }
 
     select(index) {
@@ -229,8 +188,8 @@ class Forum {
 	}
     }
 
-    next_open() {
-	this.move_to(1, (idx) => idx < this.flatlist.length)
+    next_open(start) {
+	this.move_to(1, (idx) => idx < this.flatlist.length, null, start)
     }
 
     prev_open() {
@@ -263,6 +222,13 @@ class Forum {
     }
 
     register(kbd) {
+	kbd.register({
+	    key: '=',
+	    desc: 'DEBUG console.log the selected msg object, index, etc',
+	    obj: () => this,
+	    method: 'dump_info',
+	    args: []
+	})
 	kbd.register({
 	    key: 'j',
 	    desc: 'Jump to the next comment',
