@@ -1,7 +1,14 @@
+.hnd-dialog-title {
+  text-align: center;
+  margin-top: 0;
+}
+
+
 /* Help */
 
 #hnd-help {
   background-color: white;
+  color: black;
   padding: 1em;
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
 
@@ -13,6 +20,7 @@
 }
 
 .hnd-btn-close {
+  float: left;
   font-size: large;
   cursor: pointer;
   color: black;
