@@ -6,6 +6,7 @@ require("babel-polyfill")
 
 let keyboard = require('./keyboard')
 let Help = require('./help')
+let ClunkyStore = require('./clunkystore')
 
 class Message {
 
@@ -72,13 +73,13 @@ class Message {
 	return this.btn.classList.contains('hnd-msg-btn-open')
     }
 
-    close() {
+    close(kids = true) {
 	let body = this.domnode.querySelector('span[class="comment"]')
 	body.style.display = "none"
 	this.btn.classList.add('hnd-msg-btn-closed')
 	this.btn.classList.remove('hnd-msg-btn-open')
 
-	for (let kid of this.kids) kid.close()
+	if (kids) for (let kid of this.kids) kid.close()
     }
 
     open() {
@@ -101,14 +102,22 @@ class Message {
 }
 
 class Forum {
-    constructor() {
+    constructor(clunkystore) {
+	this.db = clunkystore
+
 	this.root = new Message()
 	this.flatlist = []
 	this.index = 0
 	this.selected = null
-	this.mktree()
 
-	this.next_open(0)
+	this.mktree().then( (result) => {
+	    if (result.every( (val) => val === false )) {
+		console.log('every message is closed')
+		this.select(0)
+	    } else {
+		this.next_open(0)
+	    }
+	})
     }
 
     dump_info() {
@@ -116,6 +125,7 @@ class Forum {
 		    `this.flatlist.length=${this.flatlist.length}`)
 	console.log('this.selected:')
 	console.log(this.selected)
+	if (this.selected) this.db.del(this.selected.id)
     }
 
     select(index) {
@@ -133,9 +143,10 @@ class Forum {
 	let domnodes = document.querySelectorAll('tr[class*="comtr"]')
 	if (!(domnodes && domnodes.length)) {
 	    console.info("no messages")
-	    return
+	    return Promise.reject(0)
 	}
 
+	let promises = []
 	let prev = null
 	for (let node of domnodes) {
 	    let msg = new Message(node)
@@ -148,7 +159,26 @@ class Forum {
 	    }
 	    prev = msg
 	    this.flatlist.push(msg)
+
+	    // auto-closing facility
+	    let check = new Promise( (resolve, _) => {
+		this.db.exists(msg.id).then( ()=> {
+		    // close the message (w/o its kids) because we've
+		    // found it in the db
+		    msg.close(false)
+		    resolve(false)
+		}).catch( (err) => {
+		    // add to the db & don't wait for the result, for
+		    // we don't care
+		    console.log(err)
+		    this.db.add(msg.id)
+		    resolve(true)
+		})
+	    })
+	    promises.push(check)
 	}
+
+	return Promise.all(promises)
     }
 
     next() {
@@ -321,8 +351,10 @@ keyboard.connect()
 let help = new Help()
 help.register(keyboard)
 
-let forum = new Forum()
-forum.register(keyboard)
-//console.log(forum.root)
+let clunkystore = new ClunkyStore('hn-dweller', 1, 'comments')
+clunkystore.open().then( () => {
+    let forum = new Forum(clunkystore)
+    forum.register(keyboard)
+})
 
-console.info("init")
+console.info("hn-dweller: comments: init")
