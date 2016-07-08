@@ -23,7 +23,10 @@ class ClunkyStore {
 		this.db = event.target.result
 		// out-of-line keys
 		this.db.createObjectStore(this.table)
-		resolve('upgraded')
+		event.target.transaction.oncomplete = (event) => {
+		    this.log(`${this.dbname} ${this.version}: upgraded '${this.table}' objectstore`)
+		    resolve('upgraded')
+		}
 	    }
 	    req.onsuccess = (event) => {
 		this.db = event.target.result
