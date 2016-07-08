@@ -22,8 +22,6 @@ node_modules: package.json
 	npm i --loglevel=error --depth=0
 	touch $@
 
-compile: node_modules
-
 
 js.src := $(shell find $(src) -name '*.js' -type f)
 js.dest := $(patsubst $(src)%.js, $(out)/.ccache/%.js, $(js.src))
@@ -35,6 +33,7 @@ $(out)/.ccache/%.js: $(src)%.js
 	$(mkdir)
 	node_modules/.bin/babel --presets es2015 $(BABEL_OPT) $< -o $@
 
+$(js.dest): node_modules
 compile: $(js.dest)
 
 
