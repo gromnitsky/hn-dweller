@@ -65,3 +65,40 @@
   background-color: #ff6600;
   color: white;
 }
+
+
+/* Fav */
+#hnd-fav {
+  background-color: white;
+  color: black;
+  padding: 1em;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+
+  position: fixed;
+  top: 50%;
+  left: 85%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+}
+
+#hnd-fav table, #hnd-fav th, #hnd-fav td {
+  border: 1px solid gray;
+  color: black;
+}
+
+#hnd-fav table {
+  border-collapse: collapse;
+}
+
+#hnd-fav th, #hnd-fav td {
+  padding: 0.4em;
+}
+
+#hnd-fav th {
+  background-color: lightgoldenrodyellow;
+  text-align: center !important;
+}
+
+.hnd-colourbox {
+  display: block;
+}

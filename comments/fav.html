@@ -1,0 +1,24 @@
+<span class="hnd-btn-close" title="Close">&otimes;</span>
+<h3 class="hnd-dialog-title">Favourites</h3>
+
+<table>
+
+  <thead>
+    <tr>
+      <th>User</th>
+      <th title="Total messages">TM</th>
+      <th title="New messages">NM</th>
+    </tr>
+  </thead>
+
+    <tbody>
+      {{#users}}
+      <tr>
+	<td><span class="hnd-colourbox" data-colour="{{ colour }}">{{ name }}</span></td>
+	<td>{{ tm }}</td>
+	<td>{{ nm }}</td>
+      </tr>
+      {{/users}}
+    </tbody>
+
+</table>

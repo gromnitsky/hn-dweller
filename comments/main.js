@@ -7,6 +7,8 @@ require("babel-polyfill")
 let keyboard = require('./keyboard')
 let Help = require('./help')
 let ClunkyStore = require('./clunkystore')
+let Fav = require('./fav')
+let colours = require('../colours')
 
 class Message {
 
@@ -15,6 +17,7 @@ class Message {
 	this.from = null
 
 	this.domnode = domnode
+	this.domnode_from = null
 	this.parent = null	// a Message object
 	this.level = -1
 	this.kids = []
@@ -30,7 +33,8 @@ class Message {
 
 	this.id = this.domnode.id
 	this.level = this.domnode.querySelector('img[height="1"]').width
-	this.from = this.domnode.querySelector('a[class="hnuser"]').innerHTML
+	this.domnode_from = this.domnode.querySelector('a[class="hnuser"]')
+	this.from = this.domnode_from.innerHTML
     }
 
     kid_add(msg) {
@@ -102,7 +106,7 @@ class Message {
 }
 
 class Forum {
-    constructor(clunkystore) {
+    constructor(clunkystore, kbd) {
 	this.db = clunkystore
 
 	this.root = new Message()
@@ -117,6 +121,23 @@ class Forum {
 	    } else {
 		this.next_open(0)
 	    }
+
+	    let fav = new Fav(this)
+	    fav.register(kbd)
+
+	    // paint messages
+	    fav.users().then( (favs) => {
+		if (!favs.length) return
+
+		let cache = {}
+		favs.forEach( (val) => cache[val.name] = val)
+		for (let msg of this.flatlist) {
+		    if (!cache[msg.from]) continue
+		    colours.paint_node(msg.domnode_from, cache[msg.from].colour)
+		}
+
+		fav.display()
+	    })
 	})
     }
 
@@ -231,9 +252,10 @@ class Forum {
 	this.next_open()
     }
 
-    next_author() {
+    next_author(author) {
+	if (author === undefined) author = this.selected.from
 	this.move_to(1, (idx) => idx < this.flatlist.length,
-		     (msg) => msg.from === this.selected.from)
+		     (msg) => msg.from === author)
     }
 
     prev_author() {
@@ -353,8 +375,8 @@ help.register(keyboard)
 
 let clunkystore = new ClunkyStore('hn-dweller', 1, 'comments')
 clunkystore.open().then( () => {
-    let forum = new Forum(clunkystore)
-    forum.register(keyboard)
+    let forum = new Forum(clunkystore, keyboard)
+    forum.register(keyboard)	// FIXME
 })
 
 console.info("hn-dweller: comments: init")
