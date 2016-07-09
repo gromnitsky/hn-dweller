@@ -60,6 +60,7 @@ static.src := $(wildcard $(src)/*/*.css $(src)/*/*.html) $(src)/manifest.json
 static.dest := $(patsubst $(src)%, $(out)/%, $(static.src))
 
 $(static.dest): $(out)/%: $(src)%
+	$(mkdir)
 	cp $< $@
 
 compile: $(static.dest)
