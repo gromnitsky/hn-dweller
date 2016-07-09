@@ -3,7 +3,7 @@
 
 let Mustache = require('mustache')
 
-let defaults = require('../options/defaults')
+let defaults = require('../defaults')
 let colours = require('../colours')
 
 class Fav {

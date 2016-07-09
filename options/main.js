@@ -4,7 +4,7 @@
 
 require("babel-polyfill")
 
-let defaults = require('./defaults')
+let defaults = require('../defaults')
 let colours = require('../colours')
 
 let favourites_get = function() {
