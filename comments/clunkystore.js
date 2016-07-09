@@ -8,11 +8,7 @@ class ClunkyStore {
 	this.table = table
 	this.db = null
 
-	this.log = function() {	// TODO: extract to utils.js
-	    let args = [...arguments]
-	    args[0] = `clunkystore: ${args[0]}`
-	    console.log.apply(console, args)
-	}
+	this.log = console.log.bind(console, 'clunkystore:')
     }
 
     open() {
