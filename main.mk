@@ -23,7 +23,7 @@ node_modules: package.json
 	touch $@
 
 
-js.src := $(shell find $(src) -name '*.js' -type f)
+js.src := $(shell find $(src) -name '*.js' -type f | grep -v test)
 js.dest := $(patsubst $(src)%.js, $(out)/.ccache/%.js, $(js.src))
 
 ifeq ($(NODE_ENV), development)
@@ -81,4 +81,5 @@ test/data/user-comments/news.ycombinator.com/index.html:
 
 .PHONY: test
 test: test/data/frontpage/news.ycombinator.com/index.html \
-	test/data/user-comments/news.ycombinator.com/index.html
+		test/data/user-comments/news.ycombinator.com/index.html
+	node_modules/.bin/mocha -u tdd $(src)/test/test_*.js $(TEST_OPT)

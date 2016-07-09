@@ -15,6 +15,7 @@ const black = {
 }
 
 let str2rgb = function(str) {
+    if (!str) return null
     let m = str.match(/(\d{1,3}), *(\d{1,3}), *(\d{1,3})/)
     if (!m) return null
     return {
@@ -50,3 +51,6 @@ exports.paint_node = function(node, colour) {
     node.style.color = toRGBA(rgb)
     node.style.border = `1px solid ${toRGBA(rgb)}`
 }
+
+// 4 tests
+exports.str2rgb = str2rgb
