@@ -34,7 +34,7 @@ class Fav {
 	let colourpairs = defaults.favourites
 	return new Promise( (resolve, _) => {
 	    chrome.storage.local.get('favourites', (val) => {
-		if (Object.keys(val).length) colourpairs = val.favourites // FIXME
+		if (val && val.favourites) colourpairs = val.favourites
 		resolve(colourpairs)
 	    })
 	})

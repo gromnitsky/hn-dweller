@@ -10,7 +10,7 @@ let colours = require('../colours')
 let favourites_get = function() {
     let colourpairs = defaults.favourites
     chrome.storage.local.get('favourites', (val) => {
-	if (Object.keys(val).length) colourpairs = val.favourites
+	if (val && val.favourites) colourpairs = val.favourites
 
 	let tbody = document.querySelector('#favourites table tbody')
 	for (let key in colourpairs) {
