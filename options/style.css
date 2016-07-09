@@ -1,0 +1,52 @@
+/* Tables */
+table, th, td {
+  border: 1px solid gray;
+  color: black;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 0.4em;
+}
+
+th {
+  background-color: lightgoldenrodyellow;
+  text-align: center !important;
+}
+
+
+/* Favourites */
+#favourites {
+  float: left;
+  margin-left: 2em;
+}
+
+.colourbox {
+  display: block;
+}
+
+
+/* Lists */
+#lists {
+  float: left;
+  width: 60%;
+}
+
+#row3 {
+  margin-top: 2em;
+}
+
+#hostname, #username, #linktitle-bl, #linktitle-wl {
+  float: left;
+}
+
+#hostname, #linktitle-bl {
+  margin-right: 1em;
+}
+
+#row1, #row2 {
+  display: table;
+}

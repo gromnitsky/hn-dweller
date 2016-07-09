@@ -15,5 +15,11 @@
 
     "web_accessible_resources": [
 	"comments/*"
+    ],
+
+    "options_page": "options/index.html",
+
+    "permissions": [
+	"storage"
     ]
 }

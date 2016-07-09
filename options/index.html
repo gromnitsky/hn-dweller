@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+  <head>
+    <title>hn-dweller options</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+  </head>
+
+  <body>
+
+    <div id="lists">
+
+      <div id="row1">
+	<div id="hostname">
+	  <h2>Hostname</h2>
+	  Blacklist (exact match)<br>
+	  <textarea name="hostname" cols="32" rows="5" spellcheck="false"></textarea>
+	</div>
+
+	<div id="username">
+	  <h2>User Name</h2>
+	  Blacklist (exact match)<br>
+	  <textarea name="username" cols="32" rows="5" spellcheck="false"></textarea>
+	</div>
+      </div>
+
+      <div id="row2">
+	<div id="linktitle-bl">
+	  <h2>Link Title</h2>
+	  Blacklist (regexp)<br>
+	  <textarea name="linktitle-bl" cols="32" rows="5" spellcheck="false"></textarea>
+	</div>
+
+	<div id="linktitle-wl">
+	  <h2>&#0160;</h2>
+	  Whitelist (regexp)<br>
+	  <textarea name="linktitle-wl" cols="32" rows="5" spellcheck="false"></textarea>
+	</div>
+      </div>
+
+      <div id="row3">
+	<button id="btn_save">Save</button>
+	<button id="btn_defaults">Defaults</button>
+	<button id="btn_export">Export</button>
+
+	<p>
+	  To import previously exported settings, just drag-and-drop
+	  the .json file in this tab.
+	</p>
+
+	<p>
+	  Until you hit <i>Save</i>, no options are propagated. This
+	  includes the values from the <i>Defaults</i>
+	  button. <i>Export</i> exports the current values that may
+	  not necessarily be saved yet.
+	</p>
+
+	<p>
+	  Every list is a string in which entries are separated by
+	  newlines. <i>Regexp</i> lists aren't case
+	  sensitive, <i>exact match</i> lists are.
+	</p>
+
+	<p>
+	  The <i>Hostname</i> list has nothing to do with the domain
+	  names listed in the brackets on the HN page. To get the
+	  actual values:
+	</p>
+
+	<ol>
+	  <li>Press F12 after the HN page is loaded.</li>
+	  <li>Click on the 'Console' tab.</li>
+	  <li>There should be several lines of text. Every line is
+	    separated by commas. You need the 2nd field.</li>
+	</ol>
+      </div>
+
+    </div>
+
+    <div id="favourites">
+      <h2>Favourites in Colour</h2>
+
+      <table>
+	<thead>
+	<tr>
+	  <th>#</th>
+	  <th>User name</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	  <!-- injected colors -->
+	</tbody>
+      </table>
+
+    </div>
+
+    <script src="main.js"></script>
+
+  </body>
+</html>
