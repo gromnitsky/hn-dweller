@@ -12,20 +12,22 @@ let favourites_get = function(reset) {
     let colourpairs = defaults.favourites
     chrome.storage.local.get('favourites', (val) => {
 	if (!reset && val.favourites) colourpairs = val.favourites
-
-	let tbody = document.querySelector('#favourites table tbody')
-	tbody.innerHTML = ''
-	for (let key in colourpairs) {
-	    let val = colourpairs[key]
-	    let tr = document.createElement('tr')
-	    tr.innerHTML = `<td><span class="colourbox">${key}</span></td><td><input name="${key}" value="${val}" spellcheck="false"></td>`
-	    tbody.appendChild(tr)
-
-	    let colourbox = tr.querySelector('span')
-	    colours.paint_node(colourbox, key)
-	}
-
+	favourites_set(colourpairs)
     })
+}
+
+let favourites_set = function(colourpairs) {
+    let tbody = document.querySelector('#favourites table tbody')
+    tbody.innerHTML = ''
+    for (let key in colourpairs) {
+	let val = colourpairs[key]
+	let tr = document.createElement('tr')
+	tr.innerHTML = `<td><span class="colourbox">${key}</span></td><td><input name="${key}" value="${val}" spellcheck="false"></td>`
+	tbody.appendChild(tr)
+
+	let colourbox = tr.querySelector('span')
+	colours.paint_node(colourbox, key)
+    }
 }
 
 let favourites_save = function() {
@@ -45,10 +47,13 @@ let lists_get = function(reset) {
     let lists = defaults
     chrome.storage.local.get(['hostname', 'user', 'title_white', 'title_black'], (val) => {
 	if (!reset && Object.keys(val).length === 4) lists = val
-
-	let nodes = document.querySelectorAll('textarea')
-	nodes.forEach( (node) => node.value = lists[node.name].join("\n") )
+	lists_set(lists)
     })
+}
+
+let lists_set = function(lists) {
+    let nodes = document.querySelectorAll('textarea')
+    nodes.forEach( (node) => node.value = lists[node.name].join("\n") )
 }
 
 let lists_save = function() {
@@ -76,3 +81,9 @@ document.querySelector('#btn_defaults').onclick = function(event) {
     favourites_get(true)
     lists_get(true)
 }
+
+document.querySelector('#btn_export').onclick = function(event) {
+    // TODO
+}
+
+// TODO: dnd import
