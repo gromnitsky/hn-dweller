@@ -34,7 +34,7 @@ let favourites_save = function() {
     let inputs = document.querySelectorAll('#favourites table input')
     let r = {}
     for (let idx of inputs) {
-	r[idx.name] = idx.value || ""
+	r[idx.name] = idx.value
 	idx.disabled = true
     }
 
@@ -44,16 +44,18 @@ let favourites_save = function() {
 }
 
 let lists_get = function(reset) {
-    let lists = defaults
-    chrome.storage.local.get(['hostname', 'user', 'title_white', 'title_black'], (val) => {
-	if (!reset && Object.keys(val).length === 4) lists = val
+    let lists = defaults.filters
+    chrome.storage.local.get('filters', (val) => {
+	if (!reset && val.filter) lists = val.filters
 	lists_set(lists)
     })
 }
 
 let lists_set = function(lists) {
     let nodes = document.querySelectorAll('textarea')
-    nodes.forEach( (node) => node.value = lists[node.name].join("\n") )
+    let r = []
+    for (let key in lists) r.push[key] = lists[key]
+    nodes.forEach( (node) => node.value = r[node.name].join("\n") )
 }
 
 let lists_save = function() {
@@ -61,9 +63,9 @@ let lists_save = function() {
     nodes.forEach( (node) => node.disabled = true)
 
     for (let node of nodes) {
-	let r = {}
-	r[node.name] = filter.parseRawData(node.value)
-	chrome.storage.local.set(r, (val) => node.disabled = false )
+	let val = {filters: {}}
+	val.filters[node.name] = filter.parseRawData(node.value)
+	chrome.storage.local.set(val, (_) => node.disabled = false )
     }
 }
 

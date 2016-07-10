@@ -102,10 +102,10 @@ class News {
     }
 
     flists() {
-	let lists = defaults
+	let lists = defaults.filters
 	return new Promise( (resolve, _) => {
-	    chrome.storage.local.get(['hostname', 'user', 'title_white', 'title_black'], (val) => {
-		if (Object.keys(val).length === 4) lists = val
+	    chrome.storage.local.get('filters', (val) => {
+		if (val.filters) lists = val.filters
 		resolve(lists)
 	    })
 	})

@@ -107,10 +107,10 @@ class Message {
 }
 
 let users_blacklist = function() {
-    let list = defaults.user
+    let list = defaults.filters.user
     return new Promise( (resolve, _) => {
-	chrome.storage.local.get('user', (val) => {
-	    resolve(val.user ? val.user : list)
+	chrome.storage.local.get('filters', (val) => {
+	    resolve(val.filters ? val.filters.user : list)
 	})
     })
 }

@@ -21,57 +21,59 @@ module.exports = {
 	aqua: ''
     },
 
-    // blacklist (exact)
-    hostname: [
-	'www.theguardian.com',
-	'medium.com',
-	'nytimes.com',
-	'newyorker.com',
-	'www.slate.com',
-	'www.huffingtonpost.com',
+    filters: {
+	// blacklist (exact)
+	hostname: [
+	    'www.theguardian.com',
+	    'medium.com',
+	    'nytimes.com',
+	    'newyorker.com',
+	    'www.slate.com',
+	    'www.huffingtonpost.com',
 
-	'www.apple.com',
-	'daringfireball.net',
-	'marco.org'
-    ],
+	    'www.apple.com',
+	    'daringfireball.net',
+	    'marco.org'
+	],
 
-    // blacklist (exact)
-    user: [],
+	// blacklist (exact)
+	user: [],
 
-    // whitelist (regexp)
-    title_white: [
-	'ruby',
-	'rails',
-	'javascript',
-	'\bNode(js)?\b'
-    ],
+	// whitelist (regexp)
+	title_white: [
+	    'ruby',
+	    'rails',
+	    'javascript',
+	    '\bNode(js)?\b'
+	],
 
-    // blacklist (regexp)
-    title_black: [
-	'haskell',
-	'java',
-	'\\bApple\\b',
-	'\\bIOS(\\d+)?\\b',
-	'Iphone',
-	'\\bIp[ao]d',
-	'\\bMac(book)?\\b',
-	'\\b(Mac\\s+)?OS(\\s+)?X\\b',
-	'\\bIcloud',
-	'\\bItunes',
-	'Python',
-	'Django',
-	'Pycon',
-	'\\bPatent',
-	'Legislation',
-	'Goverment',
-	'Court\\b',
-	'\\bVim\\b',
-	'A/B\\sTest',
-	'Pirate',
-	'Torrent',
-	'App\\.net',
-	'\\bAsp\\.net',
-	'Nokia',
-	'\\bFlash'
-    ]
+	// blacklist (regexp)
+	title_black: [
+	    'haskell',
+	    'java',
+	    '\\bApple\\b',
+	    '\\bIOS(\\d+)?\\b',
+	    'Iphone',
+	    '\\bIp[ao]d',
+	    '\\bMac(book)?\\b',
+	    '\\b(Mac\\s+)?OS(\\s+)?X\\b',
+	    '\\bIcloud',
+	    '\\bItunes',
+	    'Python',
+	    'Django',
+	    'Pycon',
+	    '\\bPatent',
+	    'Legislation',
+	    'Goverment',
+	    'Court\\b',
+	    '\\bVim\\b',
+	    'A/B\\sTest',
+	    'Pirate',
+	    'Torrent',
+	    'App\\.net',
+	    '\\bAsp\\.net',
+	    'Nokia',
+	    '\\bFlash'
+	]
+    }
 }
