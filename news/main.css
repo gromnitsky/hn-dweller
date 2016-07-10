@@ -1,0 +1,11 @@
+/* Story */
+
+.hnd-story-btn-open::before {
+  content: "[-]";
+  cursor: zoom-out;
+}
+
+.hnd-story-btn-closed::before {
+  content: "[+]";
+  cursor: zoom-in;
+}

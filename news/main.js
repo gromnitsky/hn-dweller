@@ -10,39 +10,89 @@ class Story {
     constructor(domnode, flists) {
 	this.from = null
 	this.title = null
-	this.url = null
+	this.host = null
 
 	this.domnode = domnode
 	this.domnode_bottom = null
+	this.btn = null
 
-	this.hostname = new filter.FilterExact()
-	this.hostname.blacklist = flists.hostname
+	this.fhostname = new filter.FilterExact()
+	this.fhostname.blacklist = flists.hostname
 
-	this.user = new filter.FilterExact()
-	this.user.blacklist = flists.user
+	this.fuser = new filter.FilterExact()
+	this.fuser.blacklist = flists.user
 
-	this.title = new filter.FilterRegexp()
-	this.title.whitelist = flists.title_white
-	this.title.blacklist = flists.title_black
+	this.ftitle = new filter.FilterRegexp()
+	this.ftitle.whitelist = flists.title_white
+	this.ftitle.blacklist = flists.title_black
 
 	this.parse()
-//	this.btn = mkbutton()
+	this.mkbutton()
     }
 
     parse() {
 	if (!this.domnode) return
 
 	let a = this.domnode.querySelector('a[class="storylink"]')
-	this.url = a.hostname
+	this.host = a.hostname
 	this.title = a.innerText
 
 	this.domnode_bottom = this.domnode.nextSibling
 	this.from = this.domnode_bottom.querySelector('a[class="hnuser"]').innerText
     }
+
+    match() {
+	if (this.fhostname.match(this.host)) return "Host name"
+	if (this.fuser.match(this.from)) return "User name"
+	if (this.ftitle.match(this.title)) return "Story title"
+	return null
+    }
+
+    mkbutton() {
+	if (!this.domnode) return
+	let match_reason = this.match()
+	if (!match_reason) return
+
+	this.btn = this.domnode.querySelector('span[class="rank"]')
+	this.btn.innerHTML = ''
+	this.btn.className = ''
+	this.btn.title = match_reason
+	this.btn.onclick = () => this.toggle()
+	this.close()
+    }
+
+    toggle() {
+	this.is_visible() ? this.close() : this.open()
+    }
+
+    is_visible() {
+	if (!this.btn) return true
+	return this.btn.classList.contains('hnd-story-btn-open')
+    }
+
+    close() {
+	let nodes = Array.from(this.domnode.children).slice(1)
+	nodes.forEach( (node) => node.style.display = 'none' )
+	this.domnode_bottom.style.display = 'none'
+
+	this.btn.classList.add('hnd-story-btn-closed')
+	this.btn.classList.remove('hnd-story-btn-open')
+    }
+
+    open() {
+	let nodes = Array.from(this.domnode.children).slice(1)
+	nodes.forEach( (node) => node.style.display = '' )
+	this.domnode_bottom.style.display = ''
+
+	this.btn.classList.remove('hnd-story-btn-closed')
+	this.btn.classList.add('hnd-story-btn-open')
+    }
 }
 
 class News {
     constructor() {
+	this.filtered = 0
+
 	this.flists().then( (lists) => {
 	    this.mkstories(lists)
 	})
@@ -67,7 +117,8 @@ class News {
 
 	domnodes.forEach( (node, idx) => {
 	    let story = new Story(node, lists)
-	    console.log('%d. %s, %s, %s', idx+1, story.title, story.url, story.from)
+	    if (!story.is_visible()) this.filtered++
+	    console.log('%d. %s, %s, %s', idx+1, story.title, story.host, story.from)
 	})
     }
 }
