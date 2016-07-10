@@ -39,11 +39,11 @@ th {
   margin-top: 2em;
 }
 
-#hostname, #username, #linktitle-bl, #linktitle-wl {
+#hostname, #user, #title_black, #title_white {
   float: left;
 }
 
-#hostname, #linktitle-bl {
+#hostname, #title_black {
   margin-right: 1em;
 }
 
