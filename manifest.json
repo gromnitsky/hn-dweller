@@ -10,6 +10,11 @@
 	    "matches": ["file:///*/user-comments/news.ycombinator.com/index.html"],
 	    "css": ["comments/main.css"],
 	    "js": ["comments/main.js"]
+	},
+	{
+	    "matches": ["file:///*/frontpage/news.ycombinator.com/index.html"],
+	    "css": ["news/main.css"],
+	    "js": ["news/main.js"]
 	}
     ],
 
