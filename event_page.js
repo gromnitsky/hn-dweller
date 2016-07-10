@@ -6,7 +6,8 @@ chrome.runtime.onMessage.addListener( (request, sender, sendResponse) => {
     switch (name) {
     case 'news_stat':
 	chrome.browserAction.setBadgeText({
-	    text: request[name].filtered.toString()
+	    text: request[name].filtered.toString(),
+	    tabId: sender.tab.id
 	})
 	break
     default:
