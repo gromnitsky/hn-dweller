@@ -102,3 +102,15 @@
 .hnd-colourbox {
   display: block;
 }
+
+
+/* Unwanted users */
+.hnd-unwanted-user {
+  background: repeating-linear-gradient(
+		  -55deg,
+		  #7f7f7f,
+		  #7f7f7f 5px,
+		  #dedede 5px,
+		  #dedede 10px
+		);
+}

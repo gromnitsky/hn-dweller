@@ -9,6 +9,7 @@ let Help = require('./help')
 let ClunkyStore = require('./clunkystore')
 let Fav = require('./fav')
 let colours = require('../colours')
+let defaults = require('../defaults')
 
 class Message {
 
@@ -105,6 +106,25 @@ class Message {
     }
 }
 
+let users_blacklist = function() {
+    let list = defaults.user
+    return new Promise( (resolve, _) => {
+	chrome.storage.local.get('user', (val) => {
+	    resolve(val.user ? val.user : list)
+	})
+    })
+}
+
+let close_unwanted_user = function(msg) {
+    let node = msg.domnode_from
+    node.style.padding = '0px 3px 0px 3px'
+    node.style.border = `1px solid black`
+    node.className = 'hnd-unwanted-user'
+    node.innerHTML = node.innerText.replace(/./g, '&nbsp;&nbsp;')
+    node.title = msg.from
+    msg.close()
+}
+
 class Forum {
     constructor(clunkystore, kbd) {
 	this.db = clunkystore
@@ -137,6 +157,13 @@ class Forum {
 		}
 
 		fav.display()
+	    })
+
+	    // paint unwanted users
+	    users_blacklist().then( (list) => {
+		for (let msg of this.flatlist) {
+		    if (list.includes(msg.from)) close_unwanted_user(msg)
+		}
 	    })
 	})
     }
