@@ -95,6 +95,9 @@ class News {
 
 	this.flists().then( (lists) => {
 	    this.mkstories(lists)
+	    chrome.runtime.sendMessage({
+		news_stat: { filtered: this.filtered }
+	    })
 	})
     }
 

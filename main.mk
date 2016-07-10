@@ -37,7 +37,7 @@ $(js.dest): node_modules
 compile: $(js.dest)
 
 
-bundles.src := $(filter %/main.js, $(js.dest))
+bundles.src := $(filter %/main.js, $(js.dest)) $(out)/.ccache/event_page.js
 bundles.dest := $(patsubst $(out)/.ccache/%.js, $(out)/%.js, $(bundles.src))
 
 ifeq ($(NODE_ENV), development)

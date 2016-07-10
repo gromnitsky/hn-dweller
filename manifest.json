@@ -26,5 +26,12 @@
 
     "permissions": [
 	"storage"
-    ]
+    ],
+
+    "background": {
+	"scripts": ["event_page.js"],
+	"persistent": false
+    },
+
+    "browser_action": {}
 }
