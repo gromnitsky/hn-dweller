@@ -15,39 +15,30 @@ suite('Filter', function() {
 	assert.equal('', filter.parseRawData('  \n ').join('|'))
     })
 
-    test('white set/get', function() {
-	let data = '  foo\n bar\n\n\n'
-	this.fe.white_set(data)
-	assert.equal('foo\nbar', this.fe.white_get())
-
-	this.fe.white_set('')
-	assert.equal('', this.fe.white_get())
-    })
-
     test('match exact', function() {
-	this.fe.white_set('foo\nbar\nlist')
-	this.fe.black_set('list\narray')
+	this.fe.whitelist = filter.parseRawData('foo\nbar\nlist')
+	this.fe.blacklist = filter.parseRawData('list\narray')
 
 	assert.equal(false, this.fe.match('list'))
 	assert.equal(true, this.fe.match('array'))
-	this.fe.white_set('')
+	this.fe.whitelist = []
 	assert.equal(true, this.fe.match('list'))
     })
 
     test('match regexp', function() {
-	this.fr.white_set('foo\nbar\nlist')
-	this.fr.black_set('list\narray')
+	this.fr.whitelist = filter.parseRawData('foo\nbar\nlist')
+	this.fr.blacklist = filter.parseRawData('list\narray')
 
 	assert.equal(false, this.fr.match('a list in the forrest'))
 	assert.equal(true, this.fr.match('array!'))
-	this.fe.white_set('')
+	this.fe.whitelist = []
 	assert.equal(true, this.fr.match('array!'))
-	this.fr.black_set('')
+	this.fr.blacklist = []
 	assert.equal(false, this.fr.match('array'))
     })
 
     test('invalid regexp', function() {
-	this.fr.black_set('ok\ninvalid)')
+	this.fr.blacklist = filter.parseRawData('ok\ninvalid)')
 	this.fr.log = () =>
 	assert.equal(false, this.fr.match('invalid input'))
     })

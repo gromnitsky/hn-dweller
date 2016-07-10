@@ -16,22 +16,6 @@ class FilterInterface {
 	this.log = console.log.bind(console, 'filter:')
     }
 
-    white_set(str) {
-	this.whitelist = exports.parseRawData(str)
-    }
-
-    white_get() {
-	return this.whitelist.join("\n")
-    }
-
-    black_set(str) {
-	this.blacklist = exports.parseRawData(str)
-    }
-
-    black_get() {
-	return this.blacklist.join("\n")
-    }
-
     match(val) {
 	try {
 	    if (this.match_in_list(val, this.whitelist)) return false
