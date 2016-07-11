@@ -91,7 +91,7 @@ test: test/data/frontpage/news.ycombinator.com/index.html \
 pkg.name := $(proj.name)-$(proj.version)-$(NODE_ENV)
 $(pkg.name).zip: compile
 	rm -f $@
-	zip -qr $@ $(out)/*
+	cd $(out) && zip -qr $(CURDIR)/$@ *
 
 %.crx: %.zip private.pem
 	rm -f $@
