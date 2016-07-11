@@ -99,7 +99,7 @@ class Message {
 
     select() {
 	this.btn.classList.add('hnd-msg-btn-selected')
-	this.domnode.scrollIntoView(true)
+	this.domnode.scrollIntoViewIfNeeded(true) // a non-standard feature
     }
 
     deselect() {
@@ -211,6 +211,10 @@ class Forum {
 	    }
 
 	    msg.flatlist_index = this.flatlist.length
+	    msg.btn.addEventListener('click', (event) => {
+		this.select(msg.flatlist_index)
+	    }, false)
+
 	    if (msg.level === 0) {
 		this.root.kid_add(msg)
 	    } else {
