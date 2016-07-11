@@ -6,6 +6,9 @@ pp-%:
 NODE_ENV ?= development
 out := $(NODE_ENV)
 src := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
+proj.name := hn-dweller
+proj.version := $(shell json < $(src)/manifest.json version)
+
 mkdir = @mkdir -p $(dir $@)
 restart_make = @printf "\033[0;33m%s\033[0;m\n" 'Restarting $(MAKE)...'
 
@@ -83,3 +86,16 @@ test/data/user-comments/news.ycombinator.com/index.html:
 test: test/data/frontpage/news.ycombinator.com/index.html \
 		test/data/user-comments/news.ycombinator.com/index.html
 	node_modules/.bin/mocha -u tdd $(src)/test/test_*.js $(TEST_OPT)
+
+
+pkg.name := $(proj.name)-$(proj.version)-$(NODE_ENV)
+$(pkg.name).zip: compile
+	rm -f $@
+	zip -qr $@ $(out)/*
+
+%.crx: %.zip private.pem
+	rm -f $@
+	$(src)/zip2crx.sh $< private.pem
+
+.PHONY: crx
+crx: $(pkg.name).crx
