@@ -7,12 +7,24 @@
 
     "content_scripts": [
 	{
-	    "matches": ["file:///*/user-comments/news.ycombinator.com/index.html"],
+	    "matches": [
+		"*://news.ycombinator.com/item*",
+		"*://news.ycombinator.com/threads*",
+		"file:///*/user-comments/news.ycombinator.com/index.html"
+	    ],
 	    "css": ["comments/main.css"],
 	    "js": ["comments/main.js"]
 	},
 	{
-	    "matches": ["file:///*/frontpage/news.ycombinator.com/index.html"],
+	    "matches": [
+		"*://news.ycombinator.com/",
+		"*://news.ycombinator.com/news*",
+		"*://news.ycombinator.com/newest*",
+		"*://news.ycombinator.com/show*",
+		"*://news.ycombinator.com/ask*",
+		"*://news.ycombinator.com/submitted*",
+		"file:///*/frontpage/news.ycombinator.com/index.html"
+	    ],
 	    "css": ["news/main.css"],
 	    "js": ["news/main.js"]
 	}

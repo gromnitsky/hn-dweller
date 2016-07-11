@@ -38,7 +38,8 @@ class Story {
 	this.title = a.innerText
 
 	this.domnode_bottom = this.domnode.nextSibling
-	this.from = this.domnode_bottom.querySelector('a[class="hnuser"]').innerText
+	let node = this.domnode_bottom.querySelector('a[class="hnuser"]')
+	this.from = node ? node.innerHTML : "(meta)"
     }
 
     match() {

@@ -35,6 +35,7 @@ class Message {
 	this.id = this.domnode.id
 	this.level = this.domnode.querySelector('img[height="1"]').width
 	this.domnode_from = this.domnode.querySelector('a[class="hnuser"]')
+	if (!this.domnode_from) throw new Error("a deleted message?")
 	this.from = this.domnode_from.innerHTML
     }
 
@@ -197,7 +198,14 @@ class Forum {
 	let promises = []
 	let prev = null
 	for (let node of domnodes) {
-	    let msg = new Message(node)
+	    let msg
+	    try {
+		msg = new Message(node)
+	    } catch (err) {
+		console.log(err)
+		continue
+	    }
+
 	    msg.flatlist_index = this.flatlist.length
 	    if (msg.level === 0) {
 		this.root.kid_add(msg)
