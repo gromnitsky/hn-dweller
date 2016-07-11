@@ -61,6 +61,69 @@ let lists_save = function() {
     })
 }
 
+let dnd_setup = function() {
+    let holder = document
+    holder.addEventListener('dragenter', (event) => {
+	event.stopPropagation()
+	event.preventDefault()
+	colours.invert_element(holder.body)
+    }, false)
+
+    holder.addEventListener('dragleave', (event) => {
+	event.stopPropagation()
+	event.preventDefault()
+	colours.invert_element(holder.body)
+    }, false)
+
+    holder.addEventListener('dragover', (event) => {
+	event.stopPropagation()
+	event.preventDefault()
+    }, false)
+
+    holder.addEventListener('drop', (event) => {
+	event.stopPropagation()
+	event.preventDefault()
+	colours.invert_element(holder.body)
+
+	let dt = event.dataTransfer
+	if (!dt.files || dt.files.length !== 1) {
+	    alert('You need exactly 1 .json file. Try again.')
+	    return
+	}
+
+	settings_import(dt.files[0])
+    }, false)
+}
+
+let settings_import = function(file) {
+    if (!file) return
+
+    let exit_now = false
+
+    let reader = new FileReader()
+    reader.readAsText(file)
+
+    reader.onerror = () => {
+	alert(`Error reading '${file.name}'`)
+	exit_now = true
+    }
+
+    reader.onload = (data) => {
+	if (exit_now) return
+
+	let r = null
+	try {
+	    r = JSON.parse(data.target.result)
+	} catch (err) {
+	    alert(`Error parsing '${file.name}': ${err.message}`)
+	    return
+	}
+
+	favourites_set(r.favourites)
+	lists_set(r.filters)
+    }
+}
+
 
 settings().then( (val) => {
     favourites_set(val.favourites)
@@ -95,4 +158,4 @@ document.querySelector('#btn_export').onclick = function(event) {
     })
 }
 
-// TODO: dnd import
+dnd_setup()

@@ -52,5 +52,10 @@ exports.paint_node = function(node, colour) {
     node.style.border = `1px solid ${toRGBA(rgb)}`
 }
 
+exports.invert_element = function(node) {
+    node.style.backgroundColor = toRGBA(inverted(node, 'background-color'))
+    node.style.color = toRGBA(inverted(node, 'color'))
+}
+
 // 4 tests
 exports.str2rgb = str2rgb
