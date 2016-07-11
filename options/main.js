@@ -10,9 +10,11 @@ let filter = require('../news/filter')
 
 let favourites_get = function(reset) {
     let colourpairs = defaults.favourites
-    chrome.storage.local.get('favourites', (val) => {
-	if (!reset && val.favourites) colourpairs = val.favourites
-	favourites_set(colourpairs)
+    return new Promise( (resolve, _) => {
+	chrome.storage.local.get('favourites', (val) => {
+	    if (!reset && val.favourites) colourpairs = val.favourites
+	    resolve(colourpairs)
+	})
     })
 }
 
@@ -38,40 +40,51 @@ let favourites_save = function() {
 	idx.disabled = true
     }
 
-    chrome.storage.local.set({favourites: r}, (val) => {
+    chrome.storage.local.set({favourites: r}, () => {
 	for (let idx of inputs) idx.disabled = false
     })
 }
 
 let lists_get = function(reset) {
     let lists = defaults.filters
-    chrome.storage.local.get('filters', (val) => {
-	if (!reset && val.filter) lists = val.filters
-	lists_set(lists)
+    return new Promise( (resolve, _) => {
+	chrome.storage.local.get('filters', (val) => {
+	    if (!reset && val.filters) lists = val.filters
+	    resolve(lists)
+	})
     })
 }
 
 let lists_set = function(lists) {
     let nodes = document.querySelectorAll('textarea')
-    let r = []
-    for (let key in lists) r.push[key] = lists[key]
-    nodes.forEach( (node) => node.value = r[node.name].join("\n") )
+    nodes.forEach( (node) => node.value = lists[node.name].join("\n") )
 }
 
 let lists_save = function() {
     let nodes = document.querySelectorAll('textarea')
-    nodes.forEach( (node) => node.disabled = true)
+    let val = {}
+    nodes.forEach( (node) => {
+	val[node.name] = filter.parseRawData(node.value)
+	node.disabled = true
+    })
 
-    for (let node of nodes) {
-	let val = {filters: {}}
-	val.filters[node.name] = filter.parseRawData(node.value)
-	chrome.storage.local.set(val, (_) => node.disabled = false )
-    }
+    chrome.storage.local.set({filters: val}, () => {
+	nodes.forEach( (node) => node.disabled = false )
+    })
+}
+
+let settings2str = function() {
+    return Promise.all([favourites_get(), lists_get()]).then( (val) => {
+	return JSON.stringify({
+	    favourites: val[0],
+	    filters: val[1]
+	})
+    })
 }
 
 
-favourites_get()
-lists_get()
+favourites_get().then( (val) => favourites_set(val) )
+lists_get().then( (val) => lists_set(val) )
 
 document.querySelector('#btn_save').onclick = function(event) {
     favourites_save()
@@ -80,12 +93,22 @@ document.querySelector('#btn_save').onclick = function(event) {
 
 document.querySelector('#btn_defaults').onclick = function(event) {
     if (!window.confirm('Are you sure?')) return
-    favourites_get(true)
-    lists_get(true)
+    favourites_get(true).then( (val) => favourites_set(val) )
+    lists_get(true).then( (val) => lists_set(val) )
 }
 
 document.querySelector('#btn_export').onclick = function(event) {
-    // TODO
+    settings2str().then( (settings) => {
+	let blob = new Blob([settings], {type: 'text/plain'})
+	let url = URL.createObjectURL(blob)
+
+	let a = document.createElement('a')
+	a.download = 'hn-dweller_settings.json'
+	a.href = url
+	a.click()
+
+	URL.revokeObjectURL(url)
+    })
 }
 
 // TODO: dnd import
