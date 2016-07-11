@@ -166,6 +166,10 @@ class Forum {
 		    if (list.includes(msg.from)) close_unwanted_user(msg)
 		}
 	    })
+
+	    chrome.runtime.sendMessage({
+		comments_stat: { nothing: 'useful' }
+	    })
 	})
     }
 
