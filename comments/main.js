@@ -322,10 +322,10 @@ class Forum {
 		     (msg) => msg.level === 0)
     }
 
-    jump_to_parent() {
+    jump_to_parent(open_kids = true) {
 	let parent = this.selected.parent
 	if (parent.level === -1) return
-	parent.open()
+	parent.open(open_kids)
 	this.select(parent.flatlist_index)
     }
 
@@ -413,10 +413,17 @@ class Forum {
 	})
 	kbd.register({
 	    key: 'g',
-	    desc: 'Jump to the parent comment',
+	    desc: 'Jump to the parent comment, open it & its kids',
 	    obj: () => this,
 	    method: 'jump_to_parent',
 	    args: []
+	})
+	kbd.register({
+	    key: 'G',
+	    desc: 'Jump to the parent comment & open it',
+	    obj: () => this,
+	    method: 'jump_to_parent',
+	    args: [false]
 	})
 	kbd.register({
 	    key: 'a',
