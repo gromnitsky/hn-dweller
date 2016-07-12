@@ -48,12 +48,14 @@ class Fav {
 		    let user = fav[colour]
 		    if (msg.from === user) {
 			cache[user] = cache[user] || {
+			    indices: [],
 			    name: user,
 			    tm: 0,
 			    nm: 0,
 			    colour
 			}
 			cache[user].tm++
+			cache[user].indices.push(msg.flatlist_index)
 			if (msg.is_visible()) cache[user].nm++
 		    }
 		}

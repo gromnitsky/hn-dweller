@@ -123,7 +123,10 @@ let close_unwanted_user = function(msg) {
     node.className = 'hnd-unwanted-user'
     node.innerHTML = node.innerText.replace(/./g, '&nbsp;&nbsp;')
     node.title = msg.from
+
+    if (!msg.is_visible()) return false
     msg.close()
+    return true
 }
 
 class Forum {
@@ -151,33 +154,34 @@ class Forum {
 	    // paint messages
 	    fav.users().then( (favs) => {
 		if (!favs.length) return
-
-		let cache = {}
-		favs.forEach( (val) => cache[val.name] = val)
-		for (let msg of this.flatlist) {
-		    if (!cache[msg.from]) continue
-		    colours.paint_node(msg.domnode_from, cache[msg.from].colour)
-		}
+		favs.forEach( (user) => {
+		    user.indices.forEach( (idx) => {
+			colours.paint_node(this.flatlist[idx].domnode_from,
+					   user.colour)
+		    })
+		})
 
 		fav.display()
 	    })
 
 	    // paint unwanted users
-	    let unwanted = 0
 	    users_blacklist().then( (list) => {
+		let unwanted = 0
 		for (let msg of this.flatlist) {
 		    if (list.includes(msg.from)) {
-			close_unwanted_user(msg)
-			unwanted++
+			if (close_unwanted_user(msg)) unwanted++
 		    }
 		}
+
+		let opened_msg = result.reduce( (n, val) => (val === true) ? n + 1: n, 0) - unwanted
+		chrome.runtime.sendMessage({
+		    comments_stat: {
+			opened: opened_msg < 0 ? 0 : opened_msg
+		    }
+		})
+
 	    })
 
-	    chrome.runtime.sendMessage({
-		comments_stat: {
-		    opened: result.reduce( (n, val) => (val === true) ? n + 1: n, 0) - unwanted
-		}
-	    })
 	})
     }
 
