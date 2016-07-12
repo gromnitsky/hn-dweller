@@ -11,6 +11,7 @@ let listen = function(event) {
 
     if (event.key in exports.bindings) {
 	let cmd = exports.bindings[event.key]
+	if (event.ctrlKey && !cmd.ctrl) return // don't clash 'f' with ctrl-f
 	cmd.obj()[cmd.method].apply(cmd.obj(), cmd.args)
     }
 }
