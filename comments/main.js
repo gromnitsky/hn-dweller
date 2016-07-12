@@ -88,13 +88,13 @@ class Message {
 	if (kids) for (let kid of this.kids) kid.close()
     }
 
-    open() {
+    open(kids = true) {
 	let body = this.domnode.querySelector('span[class="comment"]')
 	body.style.display = ""
 	this.btn.classList.remove('hnd-msg-btn-closed')
 	this.btn.classList.add('hnd-msg-btn-open')
 
-	for (let kid of this.kids) kid.open()
+	if (kids) for (let kid of this.kids) kid.open()
     }
 
     select() {
@@ -329,6 +329,10 @@ class Forum {
 	this.select(parent.flatlist_index)
     }
 
+    open_all() {
+	this.flatlist.forEach( (msg) => msg.open(false) )
+    }
+
     register(kbd) {
 	kbd.register({
 	    key: '=',
@@ -412,6 +416,13 @@ class Forum {
 	    desc: 'Jump to the parent comment',
 	    obj: () => this,
 	    method: 'jump_to_parent',
+	    args: []
+	})
+	kbd.register({
+	    key: 'a',
+	    desc: 'Open all (closed) comments',
+	    obj: () => this,
+	    method: 'open_all',
 	    args: []
 	})
     }
