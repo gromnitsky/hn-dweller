@@ -161,14 +161,20 @@ class Forum {
 	    })
 
 	    // paint unwanted users
+	    let unwanted = 0
 	    users_blacklist().then( (list) => {
 		for (let msg of this.flatlist) {
-		    if (list.includes(msg.from)) close_unwanted_user(msg)
+		    if (list.includes(msg.from)) {
+			close_unwanted_user(msg)
+			unwanted++
+		    }
 		}
 	    })
 
 	    chrome.runtime.sendMessage({
-		comments_stat: { nothing: 'useful' }
+		comments_stat: {
+		    opened: result.reduce( (n, val) => (val === true) ? n + 1: n, 0) - unwanted
+		}
 	    })
 	})
     }

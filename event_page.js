@@ -20,6 +20,10 @@ chrome.runtime.onMessage.addListener( (request, sender, sendResponse) => {
 	activate_icons(sender)
 	break
     case 'comments_stat':
+	chrome.browserAction.setBadgeText({
+	    text: request[name].opened.toString(),
+	    tabId: sender.tab.id
+	})
 	activate_icons(sender)
 	break
     default:
