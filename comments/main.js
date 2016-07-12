@@ -129,6 +129,7 @@ let close_unwanted_user = function(msg) {
 class Forum {
     constructor(clunkystore, kbd) {
 	this.db = clunkystore
+	this.kbd = kbd
 
 	this.root = new Message()
 	this.flatlist = []
@@ -352,113 +353,113 @@ class Forum {
 //	console.log(history)
     }
 
-    register(kbd) {
-	kbd.register({
+    register() {
+	this.kbd.register({
 	    key: '=',
 	    desc: 'DEBUG console.log the selected msg object, index, etc',
 	    obj: () => this,
 	    method: 'dump_info',
 	    args: []
 	})
-	kbd.register({
+	this.kbd.register({
 	    key: 'j',
 	    desc: 'Jump to the next comment',
 	    obj: () => this,
 	    method: 'next',
 	    args: []
 	})
-	kbd.register({
+	this.kbd.register({
 	    key: 'k',
 	    desc: 'Jump to the prev comment',
 	    obj: () => this,
 	    method: 'prev',
 	    args: []
 	})
-	kbd.register({
+	this.kbd.register({
 	    key: '-',
 	    desc: 'Toggle message & its kids',
 	    obj: () => this.selected,
 	    method: 'toggle',
 	    args: []
 	})
-	kbd.register({
+	this.kbd.register({
 	    key: ',',
 	    desc: 'Jump to the next <i>open</i> comment',
 	    obj: () => this,
 	    method: 'prev_open',
 	    args: []
 	})
-	kbd.register({
+	this.kbd.register({
 	    key: '.',
 	    desc: 'Jump to the prev <i>open</i> comment',
 	    obj: () => this,
 	    method: 'next_open',
 	    args: []
 	})
-	kbd.register({
+	this.kbd.register({
 	    key: 'r',
 	    desc: 'Close the current sub-thread & move to the next <i>open</i> comment',
 	    obj: () => this,
 	    method: 'close_subthread_and_move_on',
 	    args: []
 	})
-	kbd.register({
+	this.kbd.register({
 	    key: 'l',
 	    desc: 'Jump to the next comment of the same author',
 	    obj: () => this,
 	    method: 'next_author',
 	    args: []
 	})
-	kbd.register({
+	this.kbd.register({
 	    key: 'h',
 	    desc: 'Jump to the prev comment of the same author',
 	    obj: () => this,
 	    method: 'prev_author',
 	    args: []
 	})
-	kbd.register({
+	this.kbd.register({
 	    key: '[',
 	    desc: 'Jump to the next <i>root</i> comment',
 	    obj: () => this,
 	    method: 'prev_level0',
 	    args: []
 	})
-	kbd.register({
+	this.kbd.register({
 	    key: ']',
 	    desc: 'Jump to the prev <i>root</i> comment',
 	    obj: () => this,
 	    method: 'next_level0',
 	    args: []
 	})
-	kbd.register({
+	this.kbd.register({
 	    key: 'g',
 	    desc: 'Jump to the parent comment, open it & its kids',
 	    obj: () => this,
 	    method: 'jump_to_parent',
 	    args: []
 	})
-	kbd.register({
+	this.kbd.register({
 	    key: 'G',
 	    desc: 'Jump to the parent comment & open it',
 	    obj: () => this,
 	    method: 'jump_to_parent',
 	    args: [false]
 	})
-	kbd.register({
+	this.kbd.register({
 	    key: 'a',
 	    desc: 'Open all (closed) comments',
 	    obj: () => this,
 	    method: 'open_all',
 	    args: []
 	})
-	kbd.register({
+	this.kbd.register({
 	    key: 'L',
 	    desc: 'Move back in history to the last message you were at',
 	    obj: () => this,
 	    method: 'history_jump',
 	    args: []
 	})
-	kbd.register({
+	this.kbd.register({
 	    key: 'R',
 	    desc: 'Move forward in history to the message you returned from after using <kbd>L</kbd>',
 	    obj: () => this,
@@ -476,7 +477,7 @@ help.register(keyboard)
 let clunkystore = new ClunkyStore('hn-dweller', 1, 'comments')
 clunkystore.open().then( () => {
     let forum = new Forum(clunkystore, keyboard)
-    forum.register(keyboard)	// FIXME
+    forum.register()
 })
 
 console.info("hn-dweller: comments: init")
