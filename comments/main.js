@@ -134,6 +134,7 @@ class Forum {
 	this.flatlist = []
 	this.index = 0
 	this.selected = null
+	this.selected_history = []
 
 	this.mktree().then( (result) => {
 	    if (result.every( (val) => val === false )) {
@@ -182,12 +183,13 @@ class Forum {
     dump_info() {
 	console.log(`this.index=${this.index}`,
 		    `this.flatlist.length=${this.flatlist.length}`)
+	console.log(`this.selected_history: `, this.selected_history)
 	console.log('this.selected:')
 	console.log(this.selected)
 	if (this.selected) this.db.del(this.selected.id)
     }
 
-    select(index) {
+    select(index, modify_history = true) {
 	if (index >= this.flatlist.length) index = 0
 	if (index < 0) index = this.flatlist.length-1
 
@@ -196,6 +198,8 @@ class Forum {
 	let msg = this.flatlist[index]
 	msg.select()
 	this.selected = msg
+	if (modify_history)
+	    this.selected_history.push(this.selected.flatlist_index)
     }
 
     mktree() {
@@ -333,6 +337,21 @@ class Forum {
 	this.flatlist.forEach( (msg) => msg.open(false) )
     }
 
+    history_jump(L = true) {
+	let history = this.selected_history
+	if (!history.length) return
+
+	if (L) {
+	    let last = history.pop()
+	    history.unshift(last)	// the last becomes the 1st
+	} else {
+	    let first = history.shift()
+	    history.push(first)	// the 1st becomes the last
+	}
+	this.select(history[history.length - 1], false)
+//	console.log(history)
+    }
+
     register(kbd) {
 	kbd.register({
 	    key: '=',
@@ -431,6 +450,20 @@ class Forum {
 	    obj: () => this,
 	    method: 'open_all',
 	    args: []
+	})
+	kbd.register({
+	    key: 'L',
+	    desc: 'Move back in history to the last message you were at',
+	    obj: () => this,
+	    method: 'history_jump',
+	    args: []
+	})
+	kbd.register({
+	    key: 'R',
+	    desc: 'Move forward in history to the message you returned from after using <kbd>L</kbd>',
+	    obj: () => this,
+	    method: 'history_jump',
+	    args: [false]
 	})
     }
 }
