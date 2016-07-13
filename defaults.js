@@ -26,14 +26,14 @@ module.exports = {
 	hostname: [
 	    'www.theguardian.com',
 	    'medium.com',
-	    'nytimes.com',
-	    'newyorker.com',
+	    'www.nytimes.com',
+	    'www.newyorker.com',
 	    'www.slate.com',
 	    'www.huffingtonpost.com',
 
 	    'www.apple.com',
 	    'daringfireball.net',
-	    'marco.org'
+	    'themacro.com'
 	],
 
 	// blacklist (exact)
@@ -64,7 +64,8 @@ module.exports = {
 	    'Pycon',
 	    '\\bPatent',
 	    'Legislation',
-	    'Goverment',
+	    'Govern?ment',
+	    'Judge',
 	    'Court\\b',
 	    '\\bVim\\b',
 	    'A/B\\sTest',
