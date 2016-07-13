@@ -173,10 +173,9 @@ class Forum {
 		    }
 		}
 
-		let opened_msg = result.reduce( (n, val) => (val === true) ? n + 1: n, 0) - unwanted
 		chrome.runtime.sendMessage({
 		    comments_stat: {
-			opened: opened_msg < 0 ? 0 : opened_msg
+			opened: result.reduce( (n, val) => (val === true) ? n + 1: n, 0) - unwanted
 		    }
 		})
 
