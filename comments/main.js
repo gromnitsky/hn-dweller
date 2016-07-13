@@ -4,7 +4,7 @@
 
 require("babel-polyfill")
 
-let keyboard = require('./keyboard')
+let keyboard = require('../keyboard')
 let Help = require('./help')
 let ClunkyStore = require('./clunkystore')
 let Fav = require('./fav')

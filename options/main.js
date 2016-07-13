@@ -7,6 +7,7 @@ require("babel-polyfill")
 let defaults = require('../defaults')
 let colours = require('../colours')
 let filter = require('../news/filter')
+let keyboard = require('../keyboard')
 
 let settings = function(reset) {
     return new Promise( (resolve, _) => {
@@ -124,6 +125,14 @@ let settings_import = function(file) {
     }
 }
 
+let opt = {
+    save: function() {
+	favourites_save()
+	lists_save()
+	console.log('saved')
+    }
+}
+
 
 settings().then( (val) => {
     favourites_set(val.favourites)
@@ -131,8 +140,7 @@ settings().then( (val) => {
 })
 
 document.querySelector('#btn_save').onclick = function(event) {
-    favourites_save()
-    lists_save()
+    opt.save()
 }
 
 document.querySelector('#btn_defaults').onclick = function(event) {
@@ -159,3 +167,14 @@ document.querySelector('#btn_export').onclick = function(event) {
 }
 
 dnd_setup()
+
+keyboard.register({
+    key: 'F2',
+    desc: 'Save',
+    obj: () => opt,
+    method: 'save',
+    args: []
+})
+
+keyboard.is_valid_dom_node = () => true
+keyboard.connect()

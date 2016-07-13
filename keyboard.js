@@ -2,12 +2,12 @@
 
 let IGNORED_ELEMENTS = ['INPUT', 'TEXTAREA']
 
-let is_valid_dom_node = function(name) {
+exports.is_valid_dom_node = function(name) {
     return IGNORED_ELEMENTS.indexOf(name) === -1
 }
 
 let listen = function(event) {
-    if (!is_valid_dom_node(event.target.nodeName)) return
+    if (!exports.is_valid_dom_node(event.target.nodeName)) return
 
     if (event.key in exports.bindings) {
 	let cmd = exports.bindings[event.key]
