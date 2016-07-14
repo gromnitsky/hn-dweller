@@ -478,6 +478,8 @@ let help = new Help()
 help.register(keyboard)
 
 let clunkystore = new ClunkyStore('hn-dweller', 1, 'comments')
+// babel-plugin-transform-inline-environment-variables
+if (process.env.NODE_ENV === "production") clunkystore.log = () => {}
 clunkystore.open().then( () => {
     let forum = new Forum(clunkystore, keyboard)
     forum.register()

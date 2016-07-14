@@ -3,7 +3,7 @@
 pp-%:
 	@echo "$(strip $($*))" | tr ' ' \\n
 
-NODE_ENV ?= development
+export NODE_ENV ?= development
 out := $(NODE_ENV)
 src := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 proj.name := hn-dweller
@@ -34,7 +34,7 @@ BABEL_OPT := -s inline
 endif
 $(out)/.ccache/%.js: $(src)%.js
 	$(mkdir)
-	node_modules/.bin/babel --presets es2015 $(BABEL_OPT) $< -o $@
+	node_modules/.bin/babel --presets es2015 --plugins transform-inline-environment-variables $(BABEL_OPT) $< -o $@
 
 $(js.dest): node_modules
 compile: $(js.dest)
