@@ -10,7 +10,6 @@ proj.name := hn-dweller
 proj.version := $(shell json < $(src)/manifest.json version)
 
 mkdir = @mkdir -p $(dir $@)
-restart_make = @printf "\033[0;33m%s\033[0;m\n" 'Restarting $(MAKE)...'
 
 
 .PHONY: compile
@@ -41,22 +40,28 @@ compile: $(js.dest)
 
 
 bundles.src := $(filter %/main.js, $(js.dest)) $(out)/.ccache/event_page.js
+bundles.src.d := $(bundles.src:.js=.d)
 bundles.dest := $(patsubst $(out)/.ccache/%.js, $(out)/%.js, $(bundles.src))
+
+-include $(bundles.src.d)
+
+define make-depend
+@echo Generating $(basename $<).d
+@printf '%s %s: ' $@ $(basename $<).d > $(basename $<).d
+@node_modules/.bin/browserify --no-bundle-external --list $< \
+	| sed s%.\*$<%% | sed s%$(CURDIR)/%% | tr '\n' ' ' \
+	>> $(basename $<).d
+endef
 
 ifeq ($(NODE_ENV), development)
 BROWSERIFY_OPT := -d
 endif
 $(bundles.dest): $(out)/%.js: $(out)/.ccache/%.js
 	$(mkdir)
+	$(make-depend)
 	node_modules/.bin/browserify $(BROWSERIFY_OPT) $< -o $@
 
 compile: $(bundles.dest)
-
-
-include $(out)/.ccache/depend.mk
-$(out)/.ccache/depend.mk: $(js.dest)
-	make-commonjs-depend $^ > $@
-	$(restart_make)
 
 
 static.src := $(wildcard $(src)/*/*.css $(src)/*/*.html) $(wildcard $(src)/icons/*.png) $(src)/manifest.json

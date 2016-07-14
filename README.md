@@ -56,7 +56,7 @@ different colours & fill a special _Favourites_ dialog, accessible via
 Prerequisites:
 
 * nodejs 6.3.0
-* `npm i -g make-commonjs-depend coffee-script json`
+* `npm i -g json`
 * xxd (comes w/ `vim-common` package in Fedora)
 * openssl
 
