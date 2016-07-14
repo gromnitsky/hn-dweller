@@ -33,7 +33,7 @@ module.exports = {
 
 	    'www.apple.com',
 	    'daringfireball.net',
-	    'themacro.com'
+	    'www.themacro.com'
 	],
 
 	// blacklist (exact)
