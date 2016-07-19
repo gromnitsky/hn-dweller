@@ -5,6 +5,8 @@ somewhat similar to an old
 https://github.com/gromnitsky/hackernews_blacklist, but has more
 "modern" internals.
 
+Grab [the .crx](http://gromnitsky.users.sourceforge.net/js/chrome/).
+
 Arrr, I can't stop writing those petty extensions!
 
 ![I am not crazy, I swear](http://s.quickmeme.com/img/67/67cf154511cbc862924e48669f13d3490367be675d699eb01e5b934f9ac0f227.jpg)
