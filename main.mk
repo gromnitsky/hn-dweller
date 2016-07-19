@@ -40,16 +40,15 @@ compile: $(js.dest)
 
 
 bundles.src := $(filter %/main.js, $(js.dest)) $(out)/.ccache/event_page.js
-bundles.src.d := $(bundles.src:.js=.d)
 bundles.dest := $(patsubst $(out)/.ccache/%.js, $(out)/%.js, $(bundles.src))
 
--include $(bundles.src.d)
+-include $(bundles.src:.js=.d)
 
 define make-depend
 @echo Generating $(basename $<).d
-@printf '%s %s: ' $@ $(basename $<).d > $(basename $<).d
+@printf '%s: ' $@ > $(basename $<).d
 @node_modules/.bin/browserify --no-bundle-external --list $< \
-	| sed s%.\*$<%% | sed s%$(CURDIR)/%% | tr '\n' ' ' \
+	| sed s,$(CURDIR)/,, | sed s,$<,, | tr '\n' ' ' \
 	>> $(basename $<).d
 endef
 
@@ -58,8 +57,8 @@ BROWSERIFY_OPT := -d
 endif
 $(bundles.dest): $(out)/%.js: $(out)/.ccache/%.js
 	$(mkdir)
-	$(make-depend)
 	node_modules/.bin/browserify $(BROWSERIFY_OPT) $< -o $@
+	$(make-depend)
 
 compile: $(bundles.dest)
 
