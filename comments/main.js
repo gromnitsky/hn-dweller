@@ -80,7 +80,7 @@ class Message {
     }
 
     close(kids = true) {
-	let body = this.domnode.querySelector('span[class="comment"]')
+	let body = this.domnode.querySelector('div[class="comment"]')
 	body.style.display = "none"
 	this.btn.classList.add('hnd-msg-btn-closed')
 	this.btn.classList.remove('hnd-msg-btn-open')
@@ -89,7 +89,7 @@ class Message {
     }
 
     open(kids = true) {
-	let body = this.domnode.querySelector('span[class="comment"]')
+	let body = this.domnode.querySelector('div[class="comment"]')
 	body.style.display = ""
 	this.btn.classList.remove('hnd-msg-btn-closed')
 	this.btn.classList.add('hnd-msg-btn-open')
